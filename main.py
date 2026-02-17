@@ -1,5 +1,16 @@
 from fastapi import FastAPI
 from firebase import db
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app = FastAPI()
 
@@ -37,3 +48,4 @@ def update_task(doc_id: str, new_title: str):
 def delete_task(doc_id: str):
     db.collection("tasks").document(doc_id).delete()
     return {"message": "Task deleted"}
+
