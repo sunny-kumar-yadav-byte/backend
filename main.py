@@ -28,12 +28,12 @@ def add_task(title: str):
 def get_tasks():
     docs = db.collection("tasks").stream()
     tasks = []
-
     for doc in docs:
-        task = doc.to_dict()
-        task["id"] = doc.id   # this line adds document id
-        tasks.append(task)
-
+        data = doc.to_dict()
+        tasks.append({
+            "title": data.get("title"),
+            "task_id": data.get("task_id")
+        })
     return {"tasks": tasks}
 
 # UPDATE TASK (using document id)
@@ -62,6 +62,7 @@ def delete_task(task_id: int):
             return {"message": "Task deleted"}
 
     return {"error": "Task not found"}
+
 
 
 
