@@ -12,7 +12,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app = FastAPI()
 
 @app.get("/")
 def home():
@@ -48,4 +47,5 @@ def update_task(doc_id: str, new_title: str):
 def delete_task(doc_id: str):
     db.collection("tasks").document(doc_id).delete()
     return {"message": "Task deleted"}
+
 
