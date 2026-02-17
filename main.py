@@ -37,15 +37,31 @@ def get_tasks():
     return {"tasks": tasks}
 
 # UPDATE TASK (using document id)
-@app.put("/task/{doc_id}")
-def update_task(doc_id: str, new_title: str):
-    db.collection("tasks").document(doc_id).update({"title": new_title})
-    return {"message": "Task updated"}
+@app.put("/task/{task_id}")
+def update_task(task_id: int, new_title: str):
+    docs = db.collection("tasks").stream()
+
+    for doc in docs:
+        data = doc.to_dict()
+        if data.get("task_id") == task_id:
+            db.collection("tasks").document(doc.id).update({"title": new_title})
+            return {"message": "Task updated"}
+
+    return {"error": "Task not found"}
+
 
 # DELETE TASK
-@app.delete("/task/{doc_id}")
-def delete_task(doc_id: str):
-    db.collection("tasks").document(doc_id).delete()
-    return {"message": "Task deleted"}
+@app.delete("/task/{task_id}")
+def delete_task(task_id: int):
+    docs = db.collection("tasks").stream()
+
+    for doc in docs:
+        data = doc.to_dict()
+        if data.get("task_id") == task_id:
+            db.collection("tasks").document(doc.id).delete()
+            return {"message": "Task deleted"}
+
+    return {"error": "Task not found"}
+
 
 
